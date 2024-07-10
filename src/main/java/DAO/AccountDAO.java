@@ -27,13 +27,11 @@ public class AccountDAO {
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } finally {
-            close(resultSet, preparedStatement, connection);
         }
         return exists;
     }
 
-    public Account registerAccount(Account account){
+    public Account registerAccount(Account account) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet generatedKeys = null;
@@ -46,32 +44,13 @@ public class AccountDAO {
             preparedStatement.executeUpdate();
             generatedKeys = preparedStatement.getGeneratedKeys();
 
-            if(generatedKeys.next()){
+            if (generatedKeys.next()) {
                 account.setAccount_id(generatedKeys.getInt(1));
             }
         } catch (Exception e) {
             // TODO: handle exception
-        } finally{
-            close(generatedKeys, preparedStatement, connection);
         }
         return account;
     }
-    
 
-    private void close(ResultSet rs, PreparedStatement ps, Connection con) {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-            if (ps != null) {
-                ps.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }
