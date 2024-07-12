@@ -31,4 +31,26 @@ public class MessageDAO {
         }
         return messages;
     }
+
+    public Message addMessage(Message message){
+        Connection connection = ConnectionUtil.getConnection();
+        String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

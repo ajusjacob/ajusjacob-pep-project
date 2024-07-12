@@ -19,5 +19,9 @@ public class MessageService {
     public List<Message> getAllMessages(){
         return messageDAO.getAllMessages();
     }
+
+    public Message addMessage(Message message){
+        return messageDAO.addMessage(message);
+    }
     
 }

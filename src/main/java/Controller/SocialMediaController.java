@@ -73,19 +73,19 @@ public class SocialMediaController {
 //            }
 //     }
 
-//     private void postMessages(Context context) {
-//         ObjectMapper mapper =new ObjectMapper();
-//         Message message = mapper.readValue(context.body(), Message.class);
-//         Message addedMessage = messageService.addMessage(message);
-//         if(message.getMessage_text() == null || message.getMessage_text().length() > 255){
-//             context.status(400);
-//         }
-//         if (addedMessage != null){
-//             context.json(mapper.writeValueAsString(addedMessage));
-//         }else{
-//             context.status(400);
-//         }
-//     }
+    private void postMessages(Context context) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper =new ObjectMapper();
+        Message message = mapper.readValue(context.body(), Message.class);
+        Message addedMessage = messageService.addMessage(message);
+        if(message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() > 255){
+            context.status(400);
+        }
+        if (addedMessage != null){
+            context.json(mapper.writeValueAsString(addedMessage));
+        }else{
+            context.status(400);
+        }
+    }
 
     private void getAllMessages(Context context) {
         List <Message> messages = messageService.getAllMessages();
