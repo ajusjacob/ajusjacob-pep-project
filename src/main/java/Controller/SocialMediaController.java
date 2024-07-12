@@ -36,7 +36,7 @@ public class SocialMediaController {
         app.post("/register", this::postRegister);
         // app.post("/login", this::postLogin);
         // app.post("/messages", this::postMessages);
-        // app.get("/messages", this::getAllMessages);
+        app.get("/messages", this::getAllMessages);
         // app.get("/messages/{message_id}", this::getMessagesbyId);
         // app.delete("/messages/{message_id}", this::deleteMessagesbyId);
         // app.patch("/messages/{message_id}", this::updateMessages);
@@ -87,10 +87,10 @@ public class SocialMediaController {
 //         }
 //     }
 
-//     private void getAllMessages(Context context) {
-//         List <Message> messages = messageService.getAllMessages();
-//         context.json("messages");
-//     }
+    private void getAllMessages(Context context) {
+        List <Message> messages = messageService.getAllMessages();
+        context.status(200).json(messages);
+    }
 
 //     private void getMessagesbyId(Context context) {
 //         String messageId = context.pathParam("message_id");
