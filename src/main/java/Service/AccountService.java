@@ -21,4 +21,8 @@ public class AccountService {
     public Account registerAccount(Account account) {
         return accountDAO.registerAccount(account);
     }
+
+    public boolean usernameExistsById(int user_id) {
+        return accountDAO.usernameExistsById(user_id);
+    }
 }

@@ -35,7 +35,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.post("/register", this::postRegister);
         // app.post("/login", this::postLogin);
-        // app.post("/messages", this::postMessages);
+        app.post("/messages", this::postMessages);
         app.get("/messages", this::getAllMessages);
         // app.get("/messages/{message_id}", this::getMessagesbyId);
         // app.delete("/messages/{message_id}", this::deleteMessagesbyId);
@@ -76,12 +76,16 @@ public class SocialMediaController {
     private void postMessages(Context context) throws JsonMappingException, JsonProcessingException {
         ObjectMapper mapper =new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
-        Message addedMessage = messageService.addMessage(message);
+        
         if(message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() > 255){
             context.status(400);
         }
+        if(!accountService.usernameExistsById(message.getPosted_by())){
+            context.status(400);
+        }
+        Message addedMessage = messageService.addMessage(message);
         if (addedMessage != null){
-            context.json(mapper.writeValueAsString(addedMessage));
+            context.status(200).json(addedMessage);
         }else{
             context.status(400);
         }

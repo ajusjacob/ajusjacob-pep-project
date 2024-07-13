@@ -53,4 +53,21 @@ public class AccountDAO {
         return account;
     }
 
+    public boolean usernameExistsById(int user_id) {
+        boolean exists = false;
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+            String sql = "SELECT COUNT(*) FROM account WHERE account_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, user_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                exists = resultSet.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return exists;
+    }
+
 }

@@ -32,12 +32,38 @@ public class MessageDAO {
         return messages;
     }
 
-    // public Message addMessage(Message message){
-    //     Connection connection = ConnectionUtil.getConnection();
-    //     String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
-    //     PreparedStatement preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+    public Message addMessage(Message message){
+        Message addedMessage = null;
+        try {
+            PreparedStatement preparedStatement = null;
+            ResultSet generatedKeys = null;
+            Connection connection = ConnectionUtil.getConnection();
+            String sql = "INSERT INTO message(posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
+            preparedStatement = connection.prepareStatement(sql, preparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, message.getPosted_by());
+            preparedStatement.setString(2, message.getMessage_text());
+            preparedStatement.setLong(3, message.getTime_posted_epoch());
+            int affectedRows = preparedStatement.executeUpdate();
+
+            if (affectedRows > 0) {
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int message_id = generatedKeys.getInt(1);
+                    addedMessage = new Message(
+                        message_id,
+                        message.getPosted_by(),
+                        message.getMessage_text(),
+                        message.getTime_posted_epoch()
+                    );
+                }
+            }
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return addedMessage;
         
-    // }
+    }
 
 
 
