@@ -37,9 +37,9 @@ public class SocialMediaController {
         app.post("/login", this::postLogin);
         app.post("/messages", this::postMessages);
         app.get("/messages", this::getAllMessages);
-        // app.get("/messages/{message_id}", this::getMessagesbyId);
-        // app.delete("/messages/{message_id}", this::deleteMessagesbyId);
-        // app.patch("/messages/{message_id}", this::updateMessages);
+        app.get("/messages/{message_id}", this::getMessagesbyId);
+        app.delete("/messages/{message_id}", this::deleteMessagesbyId);
+        app.patch("/messages/{message_id}", this::updateMessages);
         // app.get("/accounts/{account_id}/messages", this::getAllMessagesbyAccountId);
 
         return app;
@@ -72,7 +72,7 @@ public class SocialMediaController {
             context.status(200).json(verifiedAccount);
         }
     }
-    
+
     private void postMessages(Context context) throws JsonMappingException, JsonProcessingException {
         ObjectMapper mapper =new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
@@ -96,42 +96,56 @@ public class SocialMediaController {
         context.status(200).json(messages);
     }
 
-//     private void getMessagesbyId(Context context) {
-//         String messageId = context.pathParam("message_id");
-//         Message message = messageService.getMessagesbyId(messageId);
-//         if(message != null){
-//             context.json(message);
-//         }else{
-//             context.json("{}");
-//         }
-//     }
+    private void getMessagesbyId(Context context) {
+        String messageIdStr = context.pathParam("message_id");
+        try {
+            int messageId = Integer.parseInt(messageIdStr);
+            Message message = messageService.getMessagesbyId(messageId);
+        if(message != null){
+            context.status(200).json(message);
+        }else{
+            context.status(200).result("");
+        }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
 
-//     private void deleteMessagesbyId(Context context) {
-//         String deletemessageId = context.pathParam("message_id");
-//         Message messageToDelete = messageService.getMessagesbyId(deletemessageId);
-//         boolean deleted = messageService.getMessagesbyId(deletemessageId);
-//         if(deleted){
-//             context.json(messageToDelete);
-//         }else{
-//             context.json("{}");
-//         }
-//     }
+    private void deleteMessagesbyId(Context context) {
+        String deletemessageIdStr = context.pathParam("message_id");
+        int deletemessageId = Integer.parseInt(deletemessageIdStr);
+        Message messageToDelete = messageService.deletemessageId(deletemessageId);
+        if(messageToDelete != null){
+            context.status(200).json(messageToDelete);
+        }else{
+            context.status(200).result("");
+        }
+    }
 
-//     private void updateMessages(Context context){
-//         ObjectMapper mapper = new ObjectMapper();
-//         Message updatedMessage = mapper.readValue(context.body(), Message.class);
-//         String messageId = context.pathParam("message_id");
-//         if(updatedMessage.getMessage_text().isBlank() || updatedMessage.getMessage_text().length() > 255){
-//             context.status(400);
-//         }
+    private void updateMessages(Context context) throws JsonMappingException, JsonProcessingException{
+        ObjectMapper mapper = new ObjectMapper();
+        Message updatedMessage = mapper.readValue(context.body(), Message.class);
+        String messageIdStr = context.pathParam("message_id");
+        int messageId = Integer.parseInt(messageIdStr);
+        String newMessageText = updatedMessage.getMessage_text(); 
+        
+        if(newMessageText == null || updatedMessage.getMessage_text().isBlank() || updatedMessage.getMessage_text().length() > 255){
+            context.status(400);
+        }
 
-//         boolean updated = messageService.updateMessage(updatedMessage);
-//         if(updated){
-//             context.json(updatedMessage);
-//         }else{
-//             context.status(400);
-//         }
-//     }
+        Message existingMessage = messageService.getMessagebyId(messageId);
+        if (existingMessage == null) {
+            context.status(400);
+        }
+
+        boolean updated = messageService.updateMessageText(messageId, newMessageText);
+        
+        if(updated){
+            context.status(200).json(updatedMessage);
+        }else{
+            context.status(400);
+        }
+    }
 
 //     private void getAllMessagesbyAccountId(Context context) {
 //         String accountId = context.pathParam("account_id");
