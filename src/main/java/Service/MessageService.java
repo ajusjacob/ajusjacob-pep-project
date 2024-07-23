@@ -40,4 +40,7 @@ public class MessageService {
         return messageDAO.updateMessageText(messageId, newMessageText);
     }
     
+    public List<Message> getAllMessagesbyAccountId(int accountId){
+        return messageDAO.getAllMessagesbyAccountId(accountId);
+    }
 }

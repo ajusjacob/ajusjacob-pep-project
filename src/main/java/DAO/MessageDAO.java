@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.MenuElement;
-
 import Model.Message;
 import Util.ConnectionUtil;
 
@@ -157,6 +155,30 @@ public class MessageDAO {
             // TODO: handle exception
         }
         return isUpdated;
+    }
+
+    public List<Message> getAllMessagesbyAccountId(int accountId){
+        List<Message> messages = new ArrayList<>();
+        try {
+            Connection connection = ConnectionUtil.getConnection();
+            String sql = "SELECT * FROM message WHERE posted_by = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, accountId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Message message = new Message(
+                    resultSet.getInt("message_id"),
+                    resultSet.getInt("posted_by"),
+                    resultSet.getString("message_text"),
+                    resultSet.getLong("time_posted_epoch")
+                );
+                messages.add(message);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        return messages;
     }
 
 
