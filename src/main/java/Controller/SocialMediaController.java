@@ -34,7 +34,7 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::postRegister);
-        // app.post("/login", this::postLogin);
+        app.post("/login", this::postLogin);
         app.post("/messages", this::postMessages);
         app.get("/messages", this::getAllMessages);
         // app.get("/messages/{message_id}", this::getMessagesbyId);
@@ -62,24 +62,22 @@ public class SocialMediaController {
         }
     }
 
-//     private void postLogin(Context context) {
-//         ObjectMapper mapper = new ObjectMapper();
-//         Account account = mapper.readValue(context.body(), Account.class);
-//         if(account.getUsername() != accountService.usernameExists(account.getUsername()) &&
-//            account.getPassword() != accountService.passwordExists(account.getPassword())){
-//             context.status(401);
-//            }else{
-//             context.status(200);
-//            }
-//     }
-
-
-
+    private void postLogin(Context context) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(context.body(), Account.class);
+        Account verifiedAccount = accountService.verifyLogin(account.getUsername(), account.getPassword());
+        if (verifiedAccount == null) {
+            context.status(401);
+        }else{
+            context.status(200).json(verifiedAccount);
+        }
+    }
+    
     private void postMessages(Context context) throws JsonMappingException, JsonProcessingException {
         ObjectMapper mapper =new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
         
-        if(message.getMessage_text() == null || message.getMessage_text().isBlank() || message.getMessage_text().length() > 255){
+        if(message.getMessage_text().isBlank() || message.getMessage_text() == null || message.getMessage_text().length() > 255){
             context.status(400);
         }
         if(!accountService.usernameExistsById(message.getPosted_by())){

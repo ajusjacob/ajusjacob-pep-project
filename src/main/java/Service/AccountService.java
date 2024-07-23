@@ -18,6 +18,10 @@ public class AccountService {
         return accountDAO.usernameExists(username);
     }
 
+    public Account verifyLogin(String username, String password){
+        return accountDAO.verifyLogin(username,password);
+    }
+
     public Account registerAccount(Account account) {
         return accountDAO.registerAccount(account);
     }
