@@ -77,7 +77,7 @@ public class SocialMediaController {
         ObjectMapper mapper =new ObjectMapper();
         Message message = mapper.readValue(context.body(), Message.class);
         
-        if(message.getMessage_text().isBlank() || message.getMessage_text() == null || message.getMessage_text().length() > 255){
+        if(message.getMessage_text() == null ||  message.getMessage_text().length() > 255 || message.getMessage_text().isBlank()){
             context.status(400);
         }
         if(!accountService.usernameExistsById(message.getPosted_by())){
@@ -129,7 +129,7 @@ public class SocialMediaController {
         int messageId = Integer.parseInt(messageIdStr);
         String newMessageText = updatedMessage.getMessage_text(); 
         
-        if(newMessageText == null || updatedMessage.getMessage_text().isBlank() || updatedMessage.getMessage_text().length() > 255){
+        if(newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255){
             context.status(400);
         }
 
