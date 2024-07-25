@@ -136,7 +136,7 @@ public class MessageDAO {
                 );
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return message;
     }
@@ -152,7 +152,7 @@ public class MessageDAO {
             int affectedRows = preparedStatement.executeUpdate();
             isUpdated = affectedRows > 0;
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return isUpdated;
     }

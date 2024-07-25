@@ -79,9 +79,11 @@ public class SocialMediaController {
         
         if(message.getMessage_text() == null ||  message.getMessage_text().length() > 255 || message.getMessage_text().isBlank()){
             context.status(400);
+            return;
         }
         if(!accountService.usernameExistsById(message.getPosted_by())){
             context.status(400);
+            return;
         }
         Message addedMessage = messageService.addMessage(message);
         if (addedMessage != null){
@@ -131,17 +133,19 @@ public class SocialMediaController {
         
         if(newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255){
             context.status(400);
+            return;
         }
 
         Message existingMessage = messageService.getMessagebyId(messageId);
         if (existingMessage == null) {
             context.status(400);
+            return;
         }
-
+        existingMessage.setMessage_text(newMessageText);
         boolean updated = messageService.updateMessageText(messageId, newMessageText);
         
         if(updated){
-            context.status(200).json(updatedMessage);
+            context.status(200).json(existingMessage);
         }else{
             context.status(400);
         }
