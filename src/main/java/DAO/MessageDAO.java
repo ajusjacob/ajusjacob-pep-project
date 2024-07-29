@@ -27,7 +27,7 @@ public class MessageDAO {
                 messages.add(message);              
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return messages;
     }
@@ -57,12 +57,10 @@ public class MessageDAO {
                     );
                 }
             }
-            
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return addedMessage;
-        
     }
 
     public Message getMessagesbyId(int message_id){
@@ -83,7 +81,7 @@ public class MessageDAO {
                 );
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return message;
     }
@@ -113,7 +111,7 @@ public class MessageDAO {
                 preparedStatement.executeUpdate();
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return messageToDelete;
     }
@@ -176,7 +174,7 @@ public class MessageDAO {
                 messages.add(message);
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return messages;
     }

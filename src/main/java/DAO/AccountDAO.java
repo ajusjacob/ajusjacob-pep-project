@@ -11,21 +11,17 @@ import Util.ConnectionUtil;
 public class AccountDAO {
     public boolean usernameExists(String username) {
         boolean exists = false;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
         try {
-            connection = ConnectionUtil.getConnection();
+            Connection connection = ConnectionUtil.getConnection();
             String sql = "SELECT COUNT(*) FROM account WHERE username = ?";
-            preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, username);
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 exists = resultSet.getInt(1) > 0;
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return exists;
@@ -49,29 +45,26 @@ public class AccountDAO {
                 );
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return account;
     }
 
     public Account registerAccount(Account account) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet generatedKeys = null;
         try {
-            connection = ConnectionUtil.getConnection();
+            Connection connection = ConnectionUtil.getConnection();
             String sql = "INSERT INTO account (username, password) VALUES(?, ?)";
-            preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, account.getUsername());
             preparedStatement.setString(2, account.getPassword());
             preparedStatement.executeUpdate();
-            generatedKeys = preparedStatement.getGeneratedKeys();
-
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            
             if (generatedKeys.next()) {
                 account.setAccount_id(generatedKeys.getInt(1));
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return account;
     }
@@ -88,7 +81,7 @@ public class AccountDAO {
                 exists = resultSet.getInt(1) > 0;
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
         return exists;
     }
